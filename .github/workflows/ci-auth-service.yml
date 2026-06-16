@@ -10,6 +10,12 @@ on:
     paths:
       - 'auth-service/**'
       - '.github/workflows/ci-auth-service.yml'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch to build'
+        required: false
+        default: 'develop'
 
 permissions:
   id-token: write
