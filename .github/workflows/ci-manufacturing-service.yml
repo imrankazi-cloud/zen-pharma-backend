@@ -118,7 +118,7 @@ jobs:
             exit 0
           fi
           git commit -m "promote(qa): manufacturing-service → ${IMAGE_TAG}"
-          git push origin "$BRANCH"
+          git push --force-with-lease origin "$BRANCH"
 
           printf '%s\n' \
             "## QA Promotion" \
