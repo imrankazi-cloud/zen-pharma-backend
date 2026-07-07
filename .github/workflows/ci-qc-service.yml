@@ -7,6 +7,13 @@ on:
       - 'qc-service/**'
       - '.github/workflows/ci-qc-service.yml'
 
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch to build'
+        required: false
+        default: 'develop'
+
 permissions:
   id-token: write
   contents: read
@@ -58,6 +65,7 @@ jobs:
           git add .
           git diff --staged --quiet && echo "Already up to date" && exit 0
           git commit -m "ci(dev): update qc-service → ${IMAGE_TAG}"
+          git pull --rebase origin main
           git push
 
   open-qa-pr:
@@ -104,7 +112,7 @@ jobs:
             exit 0
           fi
           git commit -m "promote(qa): qc-service → ${IMAGE_TAG}"
-          git push --force-with-lease origin "$BRANCH"
+          git push --force origin "$BRANCH"
 
           printf '%s\n' \
             "## QA Promotion" \

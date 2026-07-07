@@ -11,6 +11,12 @@ on:
     paths:
       - 'drug-catalog-service/**'
       - '.github/workflows/ci-drug-catalog.yml'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch to build'
+        required: false
+        default: 'develop'
 
 permissions:
   id-token: write
@@ -65,6 +71,7 @@ jobs:
           git add .
           git diff --staged --quiet && echo "Already up to date" && exit 0
           git commit -m "ci(dev): update ${SVC} → ${IMAGE_TAG}"
+          git pull --rebase origin main
           git push
 
   open-qa-pr:
@@ -112,7 +119,7 @@ jobs:
             exit 0
           fi
           git commit -m "promote(qa): ${SVC} → ${IMAGE_TAG}"
-          git push origin "$BRANCH"
+          git push --force origin "$BRANCH"
 
           printf '%s\n' \
             "## QA Promotion" \

@@ -10,6 +10,12 @@ on:
     paths:
       - 'manufacturing-service/**'
       - '.github/workflows/ci-manufacturing-service.yml'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch to build'
+        required: false
+        default: 'develop'
 
 permissions:
   id-token: write
@@ -112,7 +118,7 @@ jobs:
             exit 0
           fi
           git commit -m "promote(qa): manufacturing-service → ${IMAGE_TAG}"
-          git push origin "$BRANCH"
+          git push --force origin "$BRANCH"
 
           printf '%s\n' \
             "## QA Promotion" \

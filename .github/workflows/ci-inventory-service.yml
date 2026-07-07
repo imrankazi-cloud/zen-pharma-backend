@@ -10,6 +10,12 @@ on:
     paths:
       - 'inventory-service/**'
       - '.github/workflows/ci-inventory-service.yml'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch to build'
+        required: false
+        default: 'develop'
 
 permissions:
   id-token: write
@@ -62,6 +68,7 @@ jobs:
           git add .
           git diff --staged --quiet && echo "Already up to date" && exit 0
           git commit -m "ci(dev): update inventory-service → ${IMAGE_TAG}"
+          git pull --rebase origin main
           git push
 
   open-qa-pr:
@@ -108,7 +115,7 @@ jobs:
             exit 0
           fi
           git commit -m "promote(qa): inventory-service → ${IMAGE_TAG}"
-          git push origin "$BRANCH"
+          git push --force origin "$BRANCH"
 
           printf '%s\n' \
             "## QA Promotion" \
